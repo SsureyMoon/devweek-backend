@@ -7,6 +7,6 @@ exports.login = function (req, res, next) {
     if(!(email && password)){
         throw new Error("input parameter not valid");
     }
-
+    
     return res.status(200).send("ok")
 };
