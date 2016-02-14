@@ -33,7 +33,7 @@ router.post('/api/emotion', function(req, res) {
 		faceRectangle: [req.body.faceRectangle.alpha, req.body.faceRectangle.beta, req.body.faceRectangle.gamma, req.body.faceRectangle.delta]
 	};
 
-	return res.send('/api/data', facialExpressions);
+	return res.send(facialExpressions);
 });
 
 router.get('/api/data', function(req, res) {
