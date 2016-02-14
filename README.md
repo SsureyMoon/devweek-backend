@@ -19,11 +19,11 @@ curl http://ec2-54-200-226-3.us-west-2.compute.amazonaws.com/socket.io/socket.io
 - POST /api/emotion/
   - A JSON end point used to send streaming of data
   - headers: [Common headers](#headers)
-    - request(JSON)
-      - body(JSON):
-        - same as [streaming object](#streaming)
-    - response(JSON)
-      - ok
+  - request(JSON)
+    - body(JSON):
+      - same as [streaming object](#streaming)
+  - response(JSON)
+    - ok
 
 - POST /api/emotion/done/
   - A JSON end point used to inform the end of streaming of data
@@ -68,3 +68,9 @@ If connection succeeds, server will immediately send the event **connected** wit
 ### done
 - Web Socket Object
   - profit!
+
+## Run server
+1. Install [Fabric](http://www.fabfile.org/) in your local machine
+2. Run ```fab devweek rerun:<your redis secret here>``` on the terminal
+3. ???
+4. PROFIT!
