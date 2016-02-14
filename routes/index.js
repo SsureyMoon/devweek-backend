@@ -4,10 +4,6 @@ var users = require('./users');
 // var Joi = require('joi');
 
 var config  = require('../config');
-
-var redisClient = require('../app').redisClient;
-
-
 // var authMiddleware = require('../middlewares/auth');
 
 var router = express.Router();
@@ -24,7 +20,7 @@ router.get('/api/', function(req, res) {
 });
 
 router.get('/api/stream', function(req, res) {
-    console.log("config");
+    var redisClient = req.app.utils.redisClient
     redisClient.publish(config.conf_name, "stream!!")
     return res.send('ok');
  });

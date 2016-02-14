@@ -33,13 +33,15 @@ var app = express();
 var server = http.createServer(app);
 var port = config.port;
 
-app.use(logger('developement'));
+app.use(logger());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 var socketHandler = require('./lib/socket')
     .init(server, redisClient, adapter, config.socket.namespace);
+
+app.utils = {redisClient : redisClient}
 
 app.use('/', routes);
 
