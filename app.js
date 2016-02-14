@@ -6,6 +6,14 @@ var http = require('http');
 
 var config  = require('./config');
 
+var redis = require('redis').createClient({
+    host: config.redis.host,
+    port: config.redis.port,
+    password: config.redis.password
+});
+
+
+
 
 var routes = require('./routes');
 
@@ -20,6 +28,14 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+var adapter = adapter({
+    key: config.name,
+    host: config.redis.host,
+    port: config.redis.port
+});
+
+
+
 var socketHandler = require('./lib/socket')
     .init(server, config.socket.namespace);
 
@@ -28,7 +44,7 @@ app.use('/', routes);
 
 app.use(function(req, res, next) {
     var err = new Error('Not Found');
-    
+
     err.status = 404;
     next(err);
 });
