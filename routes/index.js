@@ -1,6 +1,7 @@
 var express = require('express');
 var auth = require('./auth');
 var users = require('./users');
+var Joi = require('joi');
 
 // var authMiddleware = require('../middlewares/auth');
 
@@ -20,7 +21,25 @@ router.get('/api/', function(req, res) {
 // return token
 // router.post('/api/auth/obtain-token', auth.login);
 router.post('/api/emotion', function(req, res) {
-	var facialExpressions = {
+	var schema = Joi.object().keys({
+		faceId: Joi.number().integer(),
+		anger: Joi.number(),
+		contempt: Joi.number(),
+		disgust: Joi.number(),
+		fear: Joi.number(),
+		happiness: Joi.number(),
+		neutral: Joi.number(),
+		sadness: Joi.number(),
+		surprise: Joi.number(),
+		faceRectangle: [
+			alpha: Joi.number(),
+			beta: Joi.number(),
+			gamma: Joi.number(),
+			delta: Joi.number()
+		]
+	}).required();
+
+	Joi.validate({
 		faceId: req.body.faceId,
 		anger: req.body.anger,
 		contempt: req.body.contempt,
@@ -31,9 +50,11 @@ router.post('/api/emotion', function(req, res) {
 		sadness: req.body.sadness,
 		surprise: req.body.surprise,
 		faceRectangle: [req.body.faceRectangle.alpha, req.body.faceRectangle.beta, req.body.faceRectangle.gamma, req.body.faceRectangle.delta]
-	};
-
-	return res.send('/api/data', facialExpressions);
+	}, schema, function(err, value) {
+		if (err === null) {
+			// Data is valid
+		};
+	});
 });
 
 router.get('/api/data', function(req, res) {
