@@ -7,12 +7,6 @@ var redis = require('redis').createClient;
 
 var config  = require('./config');
 
-var redis = require('redis').createClient({
-    host: config.redis.host,
-    port: config.redis.port,
-    password: config.redis.password
- });
-
 var adapter = require('socket.io-redis');
 
 var pub = redis({
@@ -77,15 +71,8 @@ var shutdown = function() {
     server.close();
 }
 
-if (require.main === module) {
-    boot();
-} else {
-    // for api test
-    exports.boot = boot;
-    exports.server = server;
-    exports.shutdown = shutdown;
-    exports.port = port;
-}
+
+boot();
 
 exports.redisClient = redisClient
 exports.app = app;
