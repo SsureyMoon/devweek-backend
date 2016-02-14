@@ -113,13 +113,13 @@ def run_supervisor(**kwargs):
     with settings(user=env.project_user):
         if not files.exists(log_dir):
             run('mkdir -p ' + log_dir)
-        
+
         concat = ",".join([key+"=\""+kwargs[key]+"\"" for key in kwargs])
         #with prefix(concat):
         with shell_env(**kwargs):
             fabtools.require.supervisor.process('node',
                 environment=concat,#"NODE_ENV=%(ENV_NODE_ENV)s",
-                command='node --harmony app.js',
+                command='node app.js',
                 directory=git_dir,
                 user=env.project_user,
                 stdout_logfile=log_dir + 'node_stdout.log',
