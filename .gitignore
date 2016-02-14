@@ -5,3 +5,4 @@ npm-debug.log*
 .grunt
 
 node_modules
+secret.txt

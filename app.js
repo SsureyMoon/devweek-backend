@@ -5,6 +5,19 @@ var bodyParser = require('body-parser');
 var http = require('http');
 
 var config  = require('./config');
+<<<<<<< HEAD
+=======
+
+var redis = require('redis').createClient({
+    host: config.redis.host,
+    port: config.redis.port,
+    password: config.redis.password
+});
+
+
+
+
+>>>>>>> 2cef0abf8187a524c1f79ee7400911da26824ec6
 var routes = require('./routes');
 
 var app = express();
@@ -16,6 +29,14 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
+var adapter = adapter({
+    key: config.name,
+    host: config.redis.host,
+    port: config.redis.port
+});
+
+
+
 var socketHandler = require('./lib/socket')
     .init(server, config.socket.namespace);
 
@@ -23,7 +44,7 @@ app.use('/', routes);
 
 app.use(function(req, res, next) {
     var err = new Error('Not Found');
-    
+
     err.status = 404;
     next(err);
 });
