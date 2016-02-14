@@ -72,7 +72,8 @@ def update_project():
 
 def setup_nginx():
     www = "/home/{user}/www/".format(user=env.project_user)
-    config_file = www+'nginx/devweek.conf'
+    git_dir = www+'devweek_emo/'
+    config_file = git_dir+'nginx/devweek.conf'
     run('cp {original} /etc/nginx/sites-available/{target}'\
         .format(original=config_file, target='54.200.226.3'))
 
