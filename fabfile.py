@@ -117,7 +117,7 @@ def run_supervisor(**kwargs):
         with shell_env(**kwargs):
             fabtools.require.supervisor.process('node',
                 environment=concat,#"NODE_ENV=%(ENV_NODE_ENV)s",
-                command='node server.js',
+                command='node app.js',
                 directory=git_dir,
                 user=env.project_user,
                 stdout_logfile=log_dir + 'node_stdout.log',
