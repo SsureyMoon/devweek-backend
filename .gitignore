@@ -3,8 +3,8 @@ logs
 npm-debug.log*
 
 .grunt
-
+emotolize_key.pem
 node_modules
 secret.txt
-
+venv
 *.pyc

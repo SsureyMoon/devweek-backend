@@ -20,7 +20,7 @@ def devweek():
     # env.walkychat_config = {"ssh_keyfile_name": env.server_name}
     env.project_user = 'ubuntu'
     # env.db_user = 'walkychat_prototype_user'
-    env.key_filename = "~/Documents/workspace/devweek/{}".format("emotolize_key.pem")
+    env.key_filename = "/Users/MJCampos/git/devweek-backend/{}".format("emotolize_key.pem")
 
 def install_packages():
 
