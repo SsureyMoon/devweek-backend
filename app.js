@@ -26,9 +26,9 @@ var pub = redis({
  });
 
 var adapter = adapter({pubClient: pub, subClient:sub});
-var redisClient = redis({port:config.redis.port;
-var host:config.redis.host, return_buffers:true});
-var redisClient.auth(config.redis.password);
+var redisClient = redis({port:config.redis.port, host:config.redis.host, return_buffers:true});
+
+redisClient.auth(config.redis.password);
 
 var routes = require('./routes');
 
