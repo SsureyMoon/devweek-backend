@@ -1,7 +1,7 @@
 var express = require('express');
 var auth = require('./auth');
 var users = require('./users');
-var Joi = require('joi');
+// var Joi = require('joi');
 
 var config  = require('../config');
 // var authMiddleware = require('../middlewares/auth');
@@ -27,9 +27,17 @@ router.get('/api/', function(req, res) {
 //     return res.send('ok');
 //  });
 
+
+router.post('/api/emotion/done/', function(req, res) {
+    var io = req.app.utils.io
+    io.of('/'+config.socket.namespace).to(config.conf_name).emit("done", "profit!")
+    //redisClient.publish(config.conf_name, "stream!!")
+    return res.send('ok');
+})
+
 // return token
 // router.post('/api/auth/obtain-token', auth.login);
-router.post('/api/emotion', function(req, res) {
+router.post('/api/emotion/', function(req, res) {
 	// var schema = Joi.object().keys({
 	// 	faceId: Joi.number().integer().required(),
 	// 	anger: Joi.number().required(),
