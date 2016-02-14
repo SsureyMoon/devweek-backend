@@ -6,5 +6,6 @@ npm-debug.log*
 
 node_modules
 secret.txt
-
+venv
+emotolize_key.pem
 *.pyc
