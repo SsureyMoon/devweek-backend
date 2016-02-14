@@ -66,13 +66,16 @@ def update_project():
             fabtools.git.clone(git_repo, path=git_dir, use_sudo=True)
         else:
             with cd(git_dir):
+                print "djgsljolkj"
                 sudo('git checkout -- .')
                 fabtools.git.checkout('.', use_sudo=True)
                 sudo('git fetch origin')
+                sudo('git pull')
 
 def setup_nginx():
     www = "/home/{user}/www/".format(user=env.project_user)
-    config_file = www+'nginx/devweek.conf'
+    git_dir = www+'devweek_emo/'
+    config_file = git_dir+'nginx/devweek.conf'
     run('cp {original} /etc/nginx/sites-available/{target}'\
         .format(original=config_file, target='54.200.226.3'))
 
@@ -101,4 +104,5 @@ def setup_nginx():
 @task
 def setup(**kwargs):
     # install_packages()
+    update_project()
     setup_nginx()
