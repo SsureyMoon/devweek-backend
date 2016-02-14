@@ -29,7 +29,7 @@ router.get('/api/', function(req, res) {
 
 
 router.post('/api/emotion/done/', function(req, res) {
-    var io = req.app.utils.io
+    var io = req.app.utils.io;
     io.of('/'+config.socket.namespace).to(config.conf_name).emit("done", "profit!")
     //redisClient.publish(config.conf_name, "stream!!")
     return res.send('ok');
