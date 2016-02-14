@@ -32,10 +32,11 @@ if (app.get('env') === 'development') {
 }
 
 // for local testing
+var port = 8000;
+
 if (require.main === module) {
-    app.set('port', 8000)
-    app.listen(app.get('port'), function(){
-        console.info('Express server listening on port ' + app.get('port'));
+    app.listen(port, function(){
+        console.log('Express server listening on port ' + port);
     })
 }
 
