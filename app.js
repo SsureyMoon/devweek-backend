@@ -66,4 +66,4 @@ if (require.main === module) {
     exports.port = app.get('port');
 }
 
-module.exports = app;
+exports.app = app;
