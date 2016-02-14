@@ -3,8 +3,36 @@ var path = require('path');
 var logger = require('morgan');
 var bodyParser = require('body-parser');
 var http = require('http');
+var redis = require('redis').createClient;
 
 var config  = require('./config');
+
+var redis = require('redis').createClient({
+    host: config.redis.host,
+    port: config.redis.port,
+    password: config.redis.password
+ });
+
+var adapter = require('socket.io-redis');
+
+var pub = redis({
+    key: config.socket.namespace,
+    host: config.redis.host,
+    port: config.redis.port,
+    auth_pass: config.redis.password
+ });
+
+ var sub = redis({
+     key: config.socket.namespace,
+     host: config.redis.host,
+     port: config.redis.port,
+     auth_pass: config.redis.password
+ });
+
+var adapter = adapter({pubClient: pub, subClient:sub});
+var redisClient = redis(config.redis.port, config.redis.host);
+redisClient.auth(config.redis.password);
+
 var routes = require('./routes');
 
 var app = express();
@@ -17,13 +45,13 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 var socketHandler = require('./lib/socket')
-    .init(server, config.socket.namespace);
+    .init(server, redisClient, adapter, config.socket.namespace);
 
 app.use('/', routes);
 
 app.use(function(req, res, next) {
     var err = new Error('Not Found');
-    
+
     err.status = 404;
     next(err);
 });
@@ -59,4 +87,5 @@ if (require.main === module) {
     exports.port = port;
 }
 
+exports.redisClient = redisClient
 exports.app = app;

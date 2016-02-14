@@ -71,8 +71,10 @@ def update_project():
                 fabtools.git.checkout('.', use_sudo=True)
                 sudo('git fetch origin')
                 sudo('git pull')
+                sudo ('chown {}:{} -R .'.format(env.project_user, env.project_user))
     with cd(git_dir):
         fabtools.nodejs.install_dependencies()
+    sudo
 
 def setup_nginx():
     www = "/home/{user}/www/".format(user=env.project_user)

@@ -3,6 +3,11 @@ var auth = require('./auth');
 var users = require('./users');
 var Joi = require('joi');
 
+var config  = require('../config');
+
+var redisClient = require('../app').redisClient;
+
+
 // var authMiddleware = require('../middlewares/auth');
 
 var router = express.Router();
@@ -15,8 +20,14 @@ router.get('/', function(req, res) {
 // health check
 // router.use('/api*', authMiddleware.apikey);
 router.get('/api/', function(req, res) {
-	return res.send('/api/');
+	return res.send('ok');
 });
+
+router.get('/api/stream', function(req, res) {
+    console.log("config");
+    redisClient.publish(config.conf_name)
+    return res.send('ok');
+ });
 
 // return token
 // router.post('/api/auth/obtain-token', auth.login);
