@@ -1,7 +1,7 @@
 var express = require('express');
 var auth = require('./auth');
 var users = require('./users');
-var Joi = require('joi');
+// var Joi = require('joi');
 
 var config  = require('../config');
 
