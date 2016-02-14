@@ -70,7 +70,7 @@ def update_project():
                 sudo('git checkout -- .')
                 fabtools.git.checkout('.', use_sudo=True)
                 sudo('git fetch origin')
-                sudo('git full')
+                sudo('git pull')
 
 def setup_nginx():
     www = "/home/{user}/www/".format(user=env.project_user)
