@@ -71,6 +71,8 @@ def update_project():
                 fabtools.git.checkout('.', use_sudo=True)
                 sudo('git fetch origin')
                 sudo('git pull')
+    with cd(git_dir):
+        fabtools.nodejs.install_dependencies()
 
 def setup_nginx():
     www = "/home/{user}/www/".format(user=env.project_user)
@@ -115,7 +117,7 @@ def run_supervisor(**kwargs):
         with shell_env(**kwargs):
             fabtools.require.supervisor.process('node',
                 environment=concat,#"NODE_ENV=%(ENV_NODE_ENV)s",
-                command='node app.js',
+                command='node server.js',
                 directory=git_dir,
                 user=env.project_user,
                 stdout_logfile=log_dir + 'node_stdout.log',
@@ -144,6 +146,7 @@ def setup(**kwargs):
 
 @task
 def rerun(**kwargs):
+    update_project()
     stop_supervisor()
     run_supervisor()
 

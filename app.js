@@ -12,6 +12,9 @@ var routes = require('./routes');
 var app = express();
 var server = http.createServer(app);
 
+app.set('port', config.port);
+
+
 app.use(logger('developement'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -42,10 +45,25 @@ if (app.get('env') === 'development') {
 // for local testing
 var port = 8000;
 
+// boot server for mocha test
+var boot = function () {
+    server.listen(app.get('port'), function(){
+        console.info('Express server listening on port ' + app.get('port'));
+    });
+}
+
+var shutdown = function() {
+    server.close();
+}
+
 if (require.main === module) {
-    server.listen(port, function(){
-        console.log('Express server listening on port ' + port);
-    })
+    boot();
+} else {
+    // for api test
+    exports.boot = boot;
+    exports.server = server;
+    exports.shutdown = shutdown;
+    exports.port = app.get('port');
 }
 
 module.exports = app;

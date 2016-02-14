@@ -1,4 +1,5 @@
 config = {
+    port: 8000,
     database : {
         databaseName: 'database_emo',
         username:'',
