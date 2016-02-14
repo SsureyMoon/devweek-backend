@@ -21,7 +21,9 @@ router.get('/api/', function(req, res) {
 
 router.get('/api/stream', function(req, res) {
     var redisClient = req.app.utils.redisClient
-    redisClient.publish(config.socket.namespace + '#' + config.conf_name, "stream!!")
+    io = require('socket.io-emitter')(redisClient)
+        io.of(config.socket.namespace).to(config.conf_name).emit("stream", {data:"hello"})
+    //redisClient.publish(config.conf_name, "stream!!")
     return res.send('ok');
  });
 
