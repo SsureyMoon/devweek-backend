@@ -1,4 +1,5 @@
 config = {
+    port: 8000,
     database : {
         databaseName: 'database_emo',
         username:'',
@@ -7,6 +8,9 @@ config = {
     },
     jwt: {
         secret: "nc9uQRp3osdafasqcr30pw9uj0fd8mXi0pmo"
+    },
+    socket: {
+        namespace: "emo-socket"
     }
 }
 

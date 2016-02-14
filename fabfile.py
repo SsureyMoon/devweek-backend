@@ -71,38 +71,89 @@ def update_project():
                 fabtools.git.checkout('.', use_sudo=True)
                 sudo('git fetch origin')
                 sudo('git pull')
+    with cd(git_dir):
+        fabtools.nodejs.install_dependencies()
 
 def setup_nginx():
     www = "/home/{user}/www/".format(user=env.project_user)
     git_dir = www+'devweek_emo/'
     config_file = git_dir+'nginx/devweek.conf'
-    run('cp {original} /etc/nginx/sites-available/{target}'\
+    sudo('cp {original} /etc/nginx/sites-available/{target}'\
         .format(original=config_file, target='54.200.226.3'))
 
     if files.exists('/etc/nginx/sites-enabled/{target}'\
-        .format(target='54.200.226.3')):
-        run('unlink /etc/nginx/sites-enabled/{target}'\
+        .format(target='54.200.226.3'), use_sudo=True):
+        sudo('unlink /etc/nginx/sites-enabled/{target}'\
             .format(target='54.200.226.3'))
-    run('ln -s /etc/nginx/sites-available/{target} /etc/nginx/sites-enabled/{target}'\
+    sudo('ln -s /etc/nginx/sites-available/{target} /etc/nginx/sites-enabled/{target}'\
         .format(target='54.200.226.3'))
 
-    if files.exists('/etc/nginx/sites-enabled/default'):
-        run('unlink /etc/nginx/sites-enabled/default')
+    if files.exists('/etc/nginx/sites-enabled/default', use_sudo=True):
+        sudo('unlink /etc/nginx/sites-enabled/default')
 
 
     log_dir = '/etc/nginx/log/'
     if not files.exists(log_dir):
-        run('mkdir -p ' + log_dir)
-        run('touch {}local-wc.access.log'.format(log_dir))
-        run('touch {}local-wc.error.log'.format(log_dir))
+        sudo('mkdir -p ' + log_dir)
+        sudo('touch {}local-wc.access.log'.format(log_dir))
+        sudo('touch {}local-wc.error.log'.format(log_dir))
 
     if fabtools.service.is_running('nginx'):
         fabtools.service.restart('nginx')
     else:
         fabtools.service.start('nginx')
 
+
+def run_supervisor(**kwargs):
+    www = "/home/{user}/www/".format(user=env.project_user)
+    git_dir = www+'devweek_emo/'
+    log_dir = git_dir + 'logs/'
+    with settings(user=env.project_user):
+        if not files.exists(log_dir):
+            run('mkdir -p ' + log_dir)
+
+        concat = ",".join([key+"=\""+kwargs[key]+"\"" for key in kwargs])
+        #with prefix(concat):
+        with shell_env(**kwargs):
+            fabtools.require.supervisor.process('node',
+                environment=concat,#"NODE_ENV=%(ENV_NODE_ENV)s",
+                command='node server.js',
+                directory=git_dir,
+                user=env.project_user,
+                stdout_logfile=log_dir + 'node_stdout.log',
+                stderr_logfile=log_dir + 'node_stderr.log',
+                autorestart=True,
+                redirect_stderr=True,
+            )
+
+
+def stop_supervisor(**kwargs):
+    www = "/home/{user}/www/".format(user=env.project_user)
+    git_dir = www+'devweek_emo/'
+    log_dir = git_dir + 'logs/'
+    with cd(git_dir):
+        with shell_env(**kwargs):
+            fabtools.supervisor.stop_process('node')
+
+
 @task
 def setup(**kwargs):
     # install_packages()
     update_project()
     setup_nginx()
+    stop_supervisor()
+    run_supervisor()
+
+@task
+def rerun(**kwargs):
+    update_project()
+    stop_supervisor()
+    run_supervisor()
+
+@task
+def view_debug():
+    www = "/home/{user}/www/".format(user=env.project_user)
+    git_dir = www+'devweek_emo/'
+    log_dir = git_dir + 'logs/'
+    stdout_debugfile=log_dir + 'node_stdout.log'
+    run('cat '+stdout_debugfile)
