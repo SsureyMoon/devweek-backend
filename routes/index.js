@@ -2,6 +2,9 @@ var express = require('express');
 var auth = require('./auth');
 var users = require('./users');
 var Joi = require('joi');
+var config  = require('../config');
+
+var redisClient = require('../app').redisClient;
 
 // var authMiddleware = require('../middlewares/auth');
 
@@ -15,8 +18,15 @@ router.get('/', function(req, res) {
 // health check
 // router.use('/api*', authMiddleware.apikey);
 router.get('/api/', function(req, res) {
-	return res.send('/api/');
+	return res.send('ok');
 });
+
+router.get('/api/stream', function(req, res) {
+    console.log("config");
+    redisClient.publish(config.conf_name)
+	return res.send('ok');
+});
+
 
 // return token
 // router.post('/api/auth/obtain-token', auth.login);
@@ -31,12 +41,12 @@ router.post('/api/emotion', function(req, res) {
 		neutral: Joi.number(),
 		sadness: Joi.number(),
 		surprise: Joi.number(),
-		faceRectangle: [
+		faceRectangle: {
 			alpha: Joi.number(),
 			beta: Joi.number(),
 			gamma: Joi.number(),
 			delta: Joi.number()
-		]
+		}
 	}).required();
 
 	Joi.validate({

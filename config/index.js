@@ -17,7 +17,8 @@ config = {
     },
     socket: {
         namespace: "emo-socket"
-    }
+    },
+    conf_name: "test-conference"
 }
 
 config.uri = config.database.hostAndPort + '/' + config.database.databaseName;
