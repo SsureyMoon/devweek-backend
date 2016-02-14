@@ -5,26 +5,21 @@ var bodyParser = require('body-parser');
 var http = require('http');
 
 var config  = require('./config');
-
-
 var routes = require('./routes');
 
 var app = express();
 var server = http.createServer(app);
-
-app.set('port', config.port);
-
+var port = config.port;
 
 app.use(logger('developement'));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 var socketHandler = require('./lib/socket')
     .init(server, config.socket.namespace);
 
 app.use('/', routes);
-
 
 app.use(function(req, res, next) {
     var err = new Error('Not Found');
@@ -43,13 +38,10 @@ if (app.get('env') === 'development') {
     });
 }
 
-// for local testing
-var port = 8000;
-
 // boot server for mocha test
 var boot = function () {
-    server.listen(app.get('port'), function(){
-        console.info('Express server listening on port ' + app.get('port'));
+    server.listen(port, function(){
+        console.info('Express server listening on port ' + port);
     });
 }
 
@@ -64,7 +56,7 @@ if (require.main === module) {
     exports.boot = boot;
     exports.server = server;
     exports.shutdown = shutdown;
-    exports.port = app.get('port');
+    exports.port = port;
 }
 
 exports.app = app;

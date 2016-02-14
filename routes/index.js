@@ -22,22 +22,17 @@ router.get('/api/', function(req, res) {
 // router.post('/api/auth/obtain-token', auth.login);
 router.post('/api/emotion', function(req, res) {
 	var schema = Joi.object().keys({
-		faceId: Joi.number().integer(),
-		anger: Joi.number(),
-		contempt: Joi.number(),
-		disgust: Joi.number(),
-		fear: Joi.number(),
-		happiness: Joi.number(),
-		neutral: Joi.number(),
-		sadness: Joi.number(),
-		surprise: Joi.number(),
-		faceRectangle: [
-			alpha: Joi.number(),
-			beta: Joi.number(),
-			gamma: Joi.number(),
-			delta: Joi.number()
-		]
-	}).required();
+		faceId: Joi.number().integer().required(),
+		anger: Joi.number().required(),
+		contempt: Joi.number().required(),
+		disgust: Joi.number().required(),
+		fear: Joi.number().required(),
+		happiness: Joi.number().required(),
+		neutral: Joi.number().required(),
+		sadness: Joi.number().required(),
+		surprise: Joi.number().required(),
+		faceRectangle: Joi.array().length(4).required()
+	});
 
 	Joi.validate({
 		faceId: req.body.faceId,
@@ -49,12 +44,18 @@ router.post('/api/emotion', function(req, res) {
 		neutral: req.body.neutral,
 		sadness: req.body.sadness,
 		surprise: req.body.surprise,
-		faceRectangle: [req.body.faceRectangle.alpha, req.body.faceRectangle.beta, req.body.faceRectangle.gamma, req.body.faceRectangle.delta]
+		faceRectangle: req.body.faceRectangle
 	}, schema, function(err, value) {
+		console.log(value);
 		if (err === null) {
-			// Data is valid
-		};
+			console.log("Data is valid");
+			return res.send('ok')
+		} else {
+			console.log("Data is not valid");
+			return res.status(500).send('error')
+		}
 	});
+
 });
 
 router.get('/api/data', function(req, res) {
