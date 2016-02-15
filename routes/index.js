@@ -81,7 +81,7 @@ router.post('/api/emotion/', function(req, res) {
 });
 
 router.get('/api/data', function(req, res) {
-
+    
 })
 
 module.exports = router;
